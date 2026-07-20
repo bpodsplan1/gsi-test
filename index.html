@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Demo program guide with sample schedules, meals, activities, and venue information." />
+  <meta name="theme-color" content="#003878" />
+  <title>GSI 2027 - Global Scholarship Internship</title>
+
+  <!-- =========================================================
+       [01] EXTERNAL FONTS & ICONS
+       - Hanken Grotesk: Main typography
+       - Material Symbols: Interface icons
+       ========================================================= -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- =========================================================
+       [02] TAILWIND CDN
+       - Suitable for prototype / internal event guide usage.
+       - For high-traffic production, replace with a build step.
+       ========================================================= -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef5ff',
+              100: '#d9e8ff',
+              500: '#215db1',
+              600: '#034ea2',
+              700: '#003878',
+              800: '#002b5c'
+            },
+            page: '#f8f7f5',
+            ink: '#1c1b1b',
+            muted: '#69707d',
+            line: '#e4e6ea',
+            soft: '#f0f2f5'
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(0, 56, 120, 0.08)',
+            nav: '0 -6px 24px rgba(0, 56, 120, 0.08)'
+          },
+          maxWidth: {
+            content: '1200px'
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- =========================================================
+       [03] CUSTOM CSS
+       - Responsive layout details
+       - Safe-area support for iPhone
+       - Transition and accessibility helpers
+       ========================================================= -->
+  <style>
+    :root {
+      --header-height-mobile: 64px;
+      --header-height-desktop: 72px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #f8f7f5;
+      color: #1c1b1b;
+      font-family: 'Hanken Grotesk', sans-serif;
+      overflow-x: hidden;
+      padding-bottom: calc(84px + env(safe-area-inset-bottom));
+    }
+
+    @media (min-width: 1024px) {
+      body { padding-bottom: 0; }
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .hero-grid {
+      background-image:
+        radial-gradient(circle at 15% 20%, rgba(3, 78, 162, 0.12), transparent 28%),
+        radial-gradient(circle at 85% 30%, rgba(33, 93, 177, 0.10), transparent 24%),
+        linear-gradient(rgba(3, 78, 162, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(3, 78, 162, 0.045) 1px, transparent 1px);
+      background-size: auto, auto, 28px 28px, 28px 28px;
+    }
+
+    .section-anchor { scroll-margin-top: 132px; }
+
+    @media (min-width: 1024px) {
+      .section-anchor { scroll-margin-top: 96px; }
+    }
+
+    .content-transition {
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .content-transition.is-changing {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+
+    .safe-bottom {
+      padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+    }
+
+    .focus-ring:focus-visible {
+      outline: 3px solid rgba(33, 93, 177, 0.35);
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- =========================================================
+       [04] TOP HEADER
+       - Fixed on mobile and desktop
+       - Compact mobile CTA, fuller desktop navigation
+       ========================================================= -->
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-line/80 bg-white/95 backdrop-blur">
+    <div class="mx-auto flex h-16 max-w-content items-center justify-between px-4 sm:px-6 lg:h-[72px] lg:px-8">
+      <a href="#top" class="focus-ring flex items-center gap-3 rounded-lg" aria-label="Go to GSI home">
+        <div class="grid h-10 w-10 place-items-center rounded-xl bg-brand-700 text-sm font-bold text-white shadow-soft">GSI</div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-semibold leading-tight text-brand-700">Global Scholarship Internship</p>
+          <p class="text-xs text-muted">Sample City · North Campus · East Harbor</p>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Replace the href below with the final PDF path before deployment. -->
+        <a
+          href="./sample_participant_guide.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="focus-ring inline-flex items-center gap-2 rounded-lg bg-brand-700 px-3 py-2 text-xs font-semibold text-white transition hover:bg-brand-800 sm:px-4 sm:text-sm"
+        >
+          <span class="material-symbols-outlined text-[18px]">description</span>
+          <span class="sm:hidden">Sample Guide</span>
+          <span class="hidden sm:inline">Sample Participant Guide</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top" class="pt-16 lg:pt-[72px]">
+    <!-- =========================================================
+         [05] HERO SECTION
+         - Mobile: centered, concise
+         - Desktop: larger scale and wider spacing
+         ========================================================= -->
+    <section class="hero-grid border-b border-line/70 bg-white">
+      <div class="mx-auto max-w-content px-4 py-14 text-center sm:px-6 sm:py-16 lg:px-8 lg:py-24">
+        <p class="mb-4 text-xs font-bold uppercase tracking-[0.24em] text-brand-600">Sample City · October 19–22, 2027</p>
+        <h1 class="mx-auto max-w-4xl text-4xl font-bold tracking-[-0.035em] text-brand-700 sm:text-5xl lg:text-6xl">
+          Global Scholarship Internship
+        </h1>
+        <p class="mx-auto mt-5 max-w-2xl text-base leading-7 text-muted sm:text-lg lg:text-xl">
+          A four-day sample guide featuring fictional sessions, meals, activities, and venue information.
+        </p>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         [06] STICKY DAY SELECTOR
+         - Single source of truth for schedule and menu
+         - Stays visible while browsing daily information
+         ========================================================= -->
+    <section class="sticky top-16 z-40 border-b border-line/80 bg-page/95 backdrop-blur lg:top-[72px]">
+      <div class="mx-auto max-w-content px-4 py-3 sm:px-6 lg:px-8">
+        <div id="dayTabs" class="grid grid-cols-4 gap-2" role="tablist" aria-label="Select sample program day"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         [07] MAIN RESPONSIVE CONTENT WRAPPER
+         - Mobile: one-column flow
+         - Desktop: 2-column program overview
+         ========================================================= -->
+    <div class="mx-auto max-w-content px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
+      <div class="grid gap-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.75fr)] lg:items-start">
+
+        <!-- LEFT COLUMN: Schedule + Meals -->
+        <div class="space-y-8">
+          <!-- =====================================================
+               [08] DAILY SCHEDULE
+               ===================================================== -->
+          <section id="schedule-section" class="section-anchor">
+            <div class="mb-5 flex items-end justify-between gap-4">
+              <div>
+                <p id="scheduleEyebrow" class="text-sm font-semibold text-brand-600"></p>
+                <h2 class="mt-1 text-3xl font-bold tracking-tight text-brand-700">Event Schedule</h2>
+                <p class="mt-1 text-sm text-muted sm:text-base">Daily timeline and location details</p>
+              </div>
+              <span id="scheduleCount" class="hidden rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 sm:inline-flex"></span>
+            </div>
+
+            <div class="rounded-2xl border border-line bg-white p-5 shadow-soft sm:p-7">
+              <div id="scheduleContent" class="content-transition" role="tabpanel" aria-live="polite"></div>
+            </div>
+          </section>
+
+          <!-- =====================================================
+               [09] DAILY MENU
+               ===================================================== -->
+          <section id="menu-section" class="section-anchor">
+            <div class="mb-5">
+              <p id="menuEyebrow" class="text-sm font-semibold text-brand-600"></p>
+              <h2 class="mt-1 text-3xl font-bold tracking-tight text-brand-700">Daily Menu</h2>
+              <p class="mt-1 text-sm text-muted sm:text-base">Meals planned for the selected program day</p>
+            </div>
+
+            <div id="menuContent" class="content-transition grid gap-4 sm:grid-cols-2" aria-live="polite"></div>
+            <p class="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-5 text-amber-900">
+              Dietary and allergen information should be verified with the sample meal provider before final publication.
+            </p>
+          </section>
+        </div>
+
+        <!-- RIGHT COLUMN: Quick Guide on Desktop -->
+        <aside class="space-y-6 lg:sticky lg:top-[112px]">
+          <!-- =====================================================
+               [10] QUICK INFORMATION CARD
+               ===================================================== -->
+          <section class="rounded-2xl border border-line bg-white p-5 shadow-soft sm:p-6">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-brand-600">info</span>
+              <h2 class="text-xl font-bold text-ink">Program Quick Guide</h2>
+            </div>
+            <div class="mt-5 space-y-4 text-sm">
+              <div class="flex gap-3">
+                <span class="material-symbols-outlined mt-0.5 text-[20px] text-brand-600">calendar_month</span>
+                <div><p class="font-semibold text-ink">Dates</p><p class="text-muted">October 19–22, 2027</p></div>
+              </div>
+              <div class="flex gap-3">
+                <span class="material-symbols-outlined mt-0.5 text-[20px] text-brand-600">location_on</span>
+                <div><p class="font-semibold text-ink">Main Areas</p><p class="text-muted">North Campus, East Harbor, and Sample City</p></div>
+              </div>
+              <div class="flex gap-3">
+                <span class="material-symbols-outlined mt-0.5 text-[20px] text-brand-600">badge</span>
+                <div><p class="font-semibold text-ink">Tip</p><p class="text-muted">Keep your sample access badge with you during all scheduled activities.</p></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- =====================================================
+               [11] DESKTOP SECTION NAVIGATION
+               - Hidden on mobile because mobile bottom nav is used
+               ===================================================== -->
+          <nav class="hidden rounded-2xl border border-line bg-white p-3 shadow-soft lg:block" aria-label="Page sections">
+            <a data-nav-link href="#schedule-section" class="focus-ring flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-brand-700 transition hover:bg-brand-50">
+              <span class="material-symbols-outlined text-[20px]">calendar_today</span> Schedule
+            </a>
+            <a data-nav-link href="#experience-section" class="focus-ring flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-muted transition hover:bg-brand-50 hover:text-brand-700">
+              <span class="material-symbols-outlined text-[20px]">star</span> Experiences
+            </a>
+            <a data-nav-link href="#tour-section" class="focus-ring flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-muted transition hover:bg-brand-50 hover:text-brand-700">
+              <span class="material-symbols-outlined text-[20px]">map</span> Tour
+            </a>
+            <a data-nav-link href="#menu-section" class="focus-ring flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-muted transition hover:bg-brand-50 hover:text-brand-700">
+              <span class="material-symbols-outlined text-[20px]">restaurant</span> Menu
+            </a>
+            <a data-nav-link href="#venue-section" class="focus-ring flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-muted transition hover:bg-brand-50 hover:text-brand-700">
+              <span class="material-symbols-outlined text-[20px]">apartment</span> Venue
+            </a>
+          </nav>
+        </aside>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         [12] EXPERIENCE HIGHLIGHTS
+         - Mobile: horizontal scroll cards
+         - Desktop: 2-column grid
+         ========================================================= -->
+    <section id="experience-section" class="section-anchor border-y border-line/70 bg-white py-10 lg:py-14">
+      <div class="mx-auto max-w-content px-4 sm:px-6 lg:px-8">
+        <div class="mb-6">
+          <p class="text-sm font-semibold text-brand-600">Program Highlights</p>
+          <h2 class="mt-1 text-3xl font-bold tracking-tight text-ink">Experience Highlights</h2>
+          <p class="mt-1 text-sm text-muted sm:text-base">A few memorable moments from the cultural program</p>
+        </div>
+
+        <div class="no-scrollbar flex gap-4 overflow-x-auto pb-2 lg:grid lg:grid-cols-2 lg:overflow-visible">
+          <article class="min-w-[82%] overflow-hidden rounded-2xl border border-line bg-page shadow-soft sm:min-w-[360px] lg:min-w-0">
+            <div aria-hidden="true" class="h-52 w-full lg:h-64 bg-soft"></div>
+            <div class="p-5">
+              <h3 class="text-xl font-bold text-brand-700">Demo Bay Evening Cruise</h3>
+              <p class="mt-2 text-sm leading-6 text-muted">Enjoy a fictional waterfront skyline and a relaxed networking experience on the bay.</p>
+            </div>
+          </article>
+
+          <article class="min-w-[82%] overflow-hidden rounded-2xl border border-line bg-page shadow-soft sm:min-w-[360px] lg:min-w-0">
+            <div aria-hidden="true" class="h-52 w-full lg:h-64 bg-soft"></div>
+            <div class="p-5">
+              <h3 class="text-xl font-bold text-brand-700">Sample Heritage Hall</h3>
+              <p class="mt-2 text-sm leading-6 text-muted">Explore a fictional heritage venue through exhibits, storytelling, and hands-on cultural activities.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         [13] TOUR & VENUE INFORMATION
+         - Mobile: stacked
+         - Desktop: 2-column layout
+         ========================================================= -->
+    <section class="py-10 lg:py-14">
+      <div class="mx-auto grid max-w-content gap-8 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+        <section id="tour-section" class="section-anchor">
+          <div class="mb-5">
+            <p class="text-sm font-semibold text-brand-600">Sample City Discovery Program</p>
+            <h2 class="mt-1 text-3xl font-bold tracking-tight text-brand-700">Cultural Tour Path</h2>
+            <p class="mt-1 text-sm text-muted sm:text-base">Explore sample landmarks and fictional cultural destinations</p>
+          </div>
+          <div class="overflow-hidden rounded-2xl border border-line bg-white p-2 shadow-soft">
+            <div aria-hidden="true" class="h-auto w-full rounded-xl bg-soft"></div>
+          </div>
+        </section>
+
+        <section id="venue-section" class="section-anchor">
+          <div class="mb-5">
+            <p class="text-sm font-semibold text-brand-600">North Campus Learning Center</p>
+            <h2 class="mt-1 text-3xl font-bold tracking-tight text-brand-700">Venue Floor Map</h2>
+            <p class="mt-1 text-sm text-muted sm:text-base">Demo Hall · Level 2</p>
+          </div>
+          <div class="overflow-hidden rounded-2xl border border-line bg-white p-2 shadow-soft">
+            <div aria-hidden="true" class="h-auto w-full rounded-xl bg-soft"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================
+       [14] FOOTER
+       ========================================================= -->
+  <footer class="border-t border-line bg-white py-10">
+    <div class="mx-auto max-w-content px-4 text-center sm:px-6 lg:px-8">
+      <p class="text-sm font-semibold uppercase tracking-[0.16em] text-brand-700">ExampleWorks Global Scholarship Internship</p>
+      <p class="mt-2 text-xs text-muted">© 2027 ExampleWorks Corporation. Sample content only.</p>
+    </div>
+  </footer>
+
+  <!-- =========================================================
+       [15] MOBILE BOTTOM NAVIGATION
+       - Only visible below desktop breakpoint
+       - Active section is updated automatically while scrolling
+       ========================================================= -->
+  <nav class="safe-bottom fixed inset-x-0 bottom-0 z-50 border-t border-line bg-white/95 px-3 pt-2 shadow-nav backdrop-blur lg:hidden" aria-label="Mobile section navigation">
+    <div class="mx-auto grid max-w-md grid-cols-5">
+      <a data-nav-link href="#schedule-section" class="focus-ring flex flex-col items-center gap-1 rounded-lg px-1 py-1 text-brand-700" aria-label="Go to schedule">
+        <span class="material-symbols-outlined text-[21px]">calendar_today</span><span class="text-[10px] font-semibold">Schedule</span>
+      </a>
+      <a data-nav-link href="#experience-section" class="focus-ring flex flex-col items-center gap-1 rounded-lg px-1 py-1 text-muted" aria-label="Go to experiences">
+        <span class="material-symbols-outlined text-[21px]">star</span><span class="text-[10px] font-semibold">Experiences</span>
+      </a>
+      <a data-nav-link href="#tour-section" class="focus-ring flex flex-col items-center gap-1 rounded-lg px-1 py-1 text-muted" aria-label="Go to tour information">
+        <span class="material-symbols-outlined text-[21px]">map</span><span class="text-[10px] font-semibold">Tour</span>
+      </a>
+      <a data-nav-link href="#menu-section" class="focus-ring flex flex-col items-center gap-1 rounded-lg px-1 py-1 text-muted" aria-label="Go to daily menu">
+        <span class="material-symbols-outlined text-[21px]">restaurant</span><span class="text-[10px] font-semibold">Menu</span>
+      </a>
+      <a data-nav-link href="#venue-section" class="focus-ring flex flex-col items-center gap-1 rounded-lg px-1 py-1 text-muted" aria-label="Go to venue information">
+        <span class="material-symbols-outlined text-[21px]">apartment</span><span class="text-[10px] font-semibold">Venue</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- =========================================================
+       [16] PROGRAM DATA & INTERACTION LOGIC
+       - Dates, schedule, and meals live in ONE data structure.
+       - This avoids duplicated content and mismatched day states.
+       ========================================================= -->
+  <script>
+    const programData = [
+      {
+        day: 1,
+        date: '2027-10-19',
+        shortDate: '10/19',
+        weekday: 'Tue',
+        schedule: [
+          { time: '09:00–09:20', title: 'Welcome Check-in', detail: 'Demo Hall Lobby' },
+          { time: '09:20–09:50', title: 'Program Orientation', detail: 'Demo Hall · Room 204' },
+          { time: '10:00–11:10', title: 'Meet the Cohort', detail: 'Interactive introductions and team matching' },
+          { time: '11:20–12:10', title: 'Future Skills Briefing', detail: 'Sample keynote session' },
+          { time: '12:10–13:10', title: 'Lunch Break', detail: 'North Campus Learning Center Cafeteria' },
+          { time: '13:20–14:20', title: 'Personal Goal Canvas', detail: 'Individual reflection workshop' },
+          { time: '14:30–16:00', title: 'Collaborative Challenge', detail: 'Team-based problem-solving activity' },
+          { time: '16:10–16:40', title: 'Day 1 Reflection', detail: 'Demo Hall · Room 204' }
+        ],
+        meals: [
+          {
+            type: 'Breakfast',
+            name: 'Garden Vegetable Frittata',
+            desc: 'A sample breakfast plate with baked eggs and seasonal vegetables.',
+            sides: 'Toast, fruit cup, yogurt',
+            tags: ['Contains Egg', 'Vegetarian'],
+            image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221200%22 height=%22600%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23eef2f7%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2369707d%22 font-family=%22Arial%22 font-size=%2242%22%3ESample Meal Image%3C/text%3E%3C/svg%3E'
+          },
+          {
+            type: 'Lunch',
+            name: 'Herb Chicken Grain Bowl',
+            desc: 'A balanced grain bowl with grilled chicken and fresh vegetables.',
+            sides: 'Soup, pickled vegetables, seasonal fruit',
+            tags: ['Contains Poultry'],
+            image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221200%22 height=%22600%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23eef2f7%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2369707d%22 font-family=%22Arial%22 font-size=%2242%22%3ESample Meal Image%3C/text%3E%3C/svg%3E'
+          }
+        ]
+      },
+      {
+        day: 2,
+        date: '2027-10-20',
+        shortDate: '10/20',
+        weekday: 'Wed',
+        schedule: [
+          { time: '09:00–09:20', title: 'Morning Check-in', detail: 'Demo Hall Lobby' },
+          { time: '09:20–10:20', title: 'Working Across Cultures', detail: 'Demo Hall · Room 204' },
+          { time: '10:30–11:30', title: 'Innovation Lab Tour', detail: 'North Campus Learning Center' },
+          { time: '11:40–12:20', title: 'Transfer to East Harbor', detail: 'Chartered shuttle' },
+          { time: '12:20–13:20', title: 'Lunch', detail: 'East Harbor Commons' },
+          { time: '13:30–14:30', title: 'Operations Showcase', detail: 'East Harbor Demo Center' },
+          { time: '14:40–15:40', title: 'Career Story Exchange', detail: 'Small-group conversations' },
+          { time: '15:50–16:50', title: 'Team Quiz Challenge', detail: 'East Harbor Commons · Studio B' }
+        ],
+        meals: [
+          {
+            type: 'Breakfast',
+            name: 'Cinnamon Oatmeal Bowl',
+            desc: 'Warm oatmeal topped with fruit, nuts, and a light cinnamon glaze.',
+            sides: 'Boiled egg, juice, seasonal fruit',
+            tags: ['Contains Nuts', 'Vegetarian'],
+            image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221200%22 height=%22600%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23eef2f7%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2369707d%22 font-family=%22Arial%22 font-size=%2242%22%3ESample Meal Image%3C/text%3E%3C/svg%3E'
+          },
+          {
+            type: 'Lunch',
+            name: 'Roasted Vegetable Flatbread',
+            desc: 'A sample flatbread with roasted vegetables and mild cheese.',
+            sides: 'Fresh salad, soup, pickles',
+            tags: ['Vegetarian', 'Contains Dairy'],
+            image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221200%22 height=%22600%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23eef2f7%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2369707d%22 font-family=%22Arial%22 font-size=%2242%22%3ESample Meal Image%3C/text%3E%3C/svg%3E'
+          }
+        ]
+      },
+      {
+        day: 3,
+        date: '2027-10-21',
+        shortDate: '10/21',
+        weekday: 'Thu',
+        schedule: [
+          { time: '08:30–09:20', title: 'Transfer to Sample City', detail: 'Departure from North Campus' },
+          { time: '09:30–10:30', title: 'Creative District Walk', detail: 'Sample Creative Quarter' },
+          { time: '10:40–12:00', title: 'Heritage Hall Experience', detail: 'Sample Heritage Hall' },
+          { time: '12:10–13:10', title: 'Lunch', detail: 'Sample Dining Hall' },
+          { time: '13:30–15:00', title: 'Design Craft Workshop', detail: 'Sample Studio' },
+          { time: '15:20–16:30', title: 'City Discovery Mission', detail: 'Sample Riverside District' },
+          { time: '17:00–18:10', title: 'Demo Bay Evening Cruise', detail: 'Sample Pier' },
+          { time: '18:20–19:30', title: 'Networking Dinner', detail: 'Sample Banquet Hall' },
+          { time: '19:30 onward', title: 'Return to Accommodation', detail: 'Chartered shuttle' }
+        ],
+        meals: [
+          {
+            type: 'Lunch',
+            name: 'Seasonal Tasting Set',
+            desc: 'A fictional set menu featuring grains, vegetables, and a choice of protein.',
+            sides: 'Daily soup and chef-selected accompaniments',
+            tags: ['Multiple Options'],
+            image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221200%22 height=%22600%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23eef2f7%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2369707d%22 font-family=%22Arial%22 font-size=%2242%22%3ESample Meal Image%3C/text%3E%3C/svg%3E'
+          },
+          {
+            type: 'Dinner',
+            name: 'Sample Dinner Buffet',
+            desc: 'A sample buffet with international dishes and several dietary options.',
+            sides: 'Menu varies by service',
+            tags: ['Multiple Options'],
+            image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221200%22 height=%22600%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23eef2f7%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2369707d%22 font-family=%22Arial%22 font-size=%2242%22%3ESample Meal Image%3C/text%3E%3C/svg%3E'
+          }
+        ]
+      },
+      {
+        day: 4,
+        date: '2027-10-22',
+        shortDate: '10/22',
+        weekday: 'Fri',
+        schedule: [
+          { time: '09:00–09:20', title: 'Morning Check-in', detail: 'Demo Hall Lobby' },
+          { time: '09:20–10:10', title: 'Learning Map Review', detail: 'Demo Hall · Room 204' },
+          { time: '10:20–11:20', title: 'Project Storytelling Lab', detail: 'Presentation practice session' },
+          { time: '11:30–12:20', title: 'Team Showcase Preparation', detail: 'Breakout rooms' },
+          { time: '12:20–13:20', title: 'Lunch', detail: 'North Campus Learning Center Cafeteria' },
+          { time: '13:30–15:00', title: 'Team Project Showcase', detail: 'Demo Hall · Main Stage' },
+          { time: '15:10–15:50', title: 'Feedback & Commitments', detail: 'Personal action planning' },
+          { time: '16:00–16:40', title: 'Closing Ceremony', detail: 'Demo Hall · Main Stage' }
+        ],
+        meals: [
+          {
+            type: 'Breakfast',
+            name: 'Breakfast Sandwich & Fruit',
+            desc: 'A sample sandwich with egg, cheese, and vegetables.',
+            sides: 'Seasonal fruit and juice',
+            tags: ['Contains Egg', 'Contains Dairy'],
+            image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221200%22 height=%22600%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23eef2f7%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2369707d%22 font-family=%22Arial%22 font-size=%2242%22%3ESample Meal Image%3C/text%3E%3C/svg%3E'
+          },
+          {
+            type: 'Lunch',
+            name: 'Mushroom Cream Pasta',
+            desc: 'A mild pasta dish with mushrooms and a creamy herb sauce.',
+            sides: 'Green salad, bread roll, fruit',
+            tags: ['Vegetarian', 'Contains Dairy', 'Contains Gluten'],
+            image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221200%22 height=%22600%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23eef2f7%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2369707d%22 font-family=%22Arial%22 font-size=%2242%22%3ESample Meal Image%3C/text%3E%3C/svg%3E'
+          },
+          {
+            type: 'Dinner',
+            name: 'Optional Departure Meal',
+            desc: 'A light take-away meal prepared for participants with later departures.',
+            sides: 'Sandwich, fruit, bottled water',
+            tags: ['Pre-order Required'],
+            image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221200%22 height=%22600%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23eef2f7%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2369707d%22 font-family=%22Arial%22 font-size=%2242%22%3ESample Meal Image%3C/text%3E%3C/svg%3E'
+          }
+        ]
+      }
+    ];
+
+    let currentDayIndex = 0;
+
+    // ---------------------------------------------------------
+    // [16-A] Build the day selector from programData.
+    // ---------------------------------------------------------
+    function renderDayTabs() {
+      const dayTabs = document.getElementById('dayTabs');
+      dayTabs.innerHTML = programData.map((item, index) => `
+        <button
+          type="button"
+          role="tab"
+          aria-selected="${index === currentDayIndex}"
+          aria-controls="scheduleContent"
+          data-day-index="${index}"
+          class="focus-ring rounded-xl px-2 py-2.5 text-center transition sm:px-4 ${
+            index === currentDayIndex
+              ? 'bg-brand-700 text-white shadow-soft'
+              : 'bg-white text-muted hover:bg-brand-50 hover:text-brand-700'
+          }"
+        >
+          <span class="block text-xs font-bold sm:text-sm">Day ${item.day}</span>
+          <span class="mt-0.5 block text-[10px] opacity-80 sm:text-xs">${item.shortDate} · ${item.weekday}</span>
+        </button>
+      `).join('');
+
+      dayTabs.querySelectorAll('[data-day-index]').forEach(button => {
+        button.addEventListener('click', () => updateDay(Number(button.dataset.dayIndex)));
+      });
+    }
+
+    // ---------------------------------------------------------
+    // [16-B] Render daily schedule.
+    // ---------------------------------------------------------
+    function renderSchedule(dayIndex) {
+      const day = programData[dayIndex];
+      return `
+        <ol class="space-y-0">
+          ${day.schedule.map((item, index) => `
+            <li class="relative grid grid-cols-[88px_1fr] gap-4 pb-6 sm:grid-cols-[112px_1fr] sm:gap-6 ${index === day.schedule.length - 1 ? 'pb-0' : ''}">
+              ${index !== day.schedule.length - 1 ? '<span class="absolute left-[43px] top-7 h-[calc(100%-14px)] w-px bg-line sm:left-[55px]"></span>' : ''}
+              <div class="relative">
+                <span class="inline-flex rounded-lg bg-brand-50 px-2.5 py-1.5 text-[11px] font-bold text-brand-700 sm:text-xs">${item.time}</span>
+              </div>
+              <div class="min-w-0 pt-0.5">
+                <h3 class="text-base font-bold text-ink sm:text-[17px]">${item.title}</h3>
+                ${item.detail ? `<p class="mt-1 text-sm leading-6 text-muted">${item.detail}</p>` : ''}
+              </div>
+            </li>
+          `).join('')}
+        </ol>
+      `;
+    }
+
+    // ---------------------------------------------------------
+    // [16-C] Render daily meals.
+    // ---------------------------------------------------------
+    function renderMenu(dayIndex) {
+      const day = programData[dayIndex];
+      return day.meals.map(meal => `
+        <article class="overflow-hidden rounded-2xl border border-line bg-white shadow-soft">
+          <div class="relative h-44 overflow-hidden">
+            <img src="${meal.image}" alt="${meal.name}" loading="lazy" decoding="async" class="h-full w-full object-cover" />
+            <span class="absolute left-3 top-3 rounded-full bg-brand-700 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">${meal.type}</span>
+          </div>
+          <div class="p-5">
+            <h3 class="text-lg font-bold leading-6 text-brand-700">${meal.name}</h3>
+            <p class="mt-2 text-sm leading-6 text-muted">${meal.desc}</p>
+            <p class="mt-3 text-xs leading-5 text-muted"><strong class="text-ink">Sides:</strong> ${meal.sides}</p>
+            <div class="mt-4 flex flex-wrap gap-2">
+              ${meal.tags.map(tag => `<span class="rounded-full bg-soft px-2.5 py-1 text-[11px] font-semibold text-muted">${tag}</span>`).join('')}
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    // ---------------------------------------------------------
+    // [16-D] Update every day-dependent UI element together.
+    // ---------------------------------------------------------
+    function updateDay(dayIndex) {
+      if (dayIndex === currentDayIndex) return;
+
+      const scheduleContent = document.getElementById('scheduleContent');
+      const menuContent = document.getElementById('menuContent');
+      scheduleContent.classList.add('is-changing');
+      menuContent.classList.add('is-changing');
+
+      window.setTimeout(() => {
+        currentDayIndex = dayIndex;
+        const day = programData[dayIndex];
+
+        renderDayTabs();
+        scheduleContent.innerHTML = renderSchedule(dayIndex);
+        menuContent.innerHTML = renderMenu(dayIndex);
+        document.getElementById('scheduleEyebrow').textContent = `Day ${day.day} · ${day.shortDate} (${day.weekday})`;
+        document.getElementById('menuEyebrow').textContent = `Day ${day.day} · ${day.shortDate} (${day.weekday})`;
+        document.getElementById('scheduleCount').textContent = `${day.schedule.length} activities`;
+
+        scheduleContent.classList.remove('is-changing');
+        menuContent.classList.remove('is-changing');
+      }, 160);
+    }
+
+    // ---------------------------------------------------------
+    // [16-E] Highlight the current section in mobile/desktop nav.
+    // ---------------------------------------------------------
+    function initSectionObserver() {
+      const sectionIds = ['schedule-section', 'experience-section', 'tour-section', 'menu-section', 'venue-section'];
+      const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+      const navLinks = document.querySelectorAll('[data-nav-link]');
+
+      const setActiveNav = (id) => {
+        navLinks.forEach(link => {
+          const active = link.getAttribute('href') === `#${id}`;
+          link.classList.toggle('text-brand-700', active);
+          link.classList.toggle('text-muted', !active);
+        });
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter(entry => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visible) setActiveNav(visible.target.id);
+      }, {
+        rootMargin: '-28% 0px -58% 0px',
+        threshold: [0.05, 0.2, 0.4]
+      });
+
+      sections.forEach(section => observer.observe(section));
+    }
+
+    // ---------------------------------------------------------
+    // [16-F] Initial render.
+    // ---------------------------------------------------------
+    function initPage() {
+      const firstDay = programData[0];
+      renderDayTabs();
+      document.getElementById('scheduleContent').innerHTML = renderSchedule(0);
+      document.getElementById('menuContent').innerHTML = renderMenu(0);
+      document.getElementById('scheduleEyebrow').textContent = `Day ${firstDay.day} · ${firstDay.shortDate} (${firstDay.weekday})`;
+      document.getElementById('menuEyebrow').textContent = `Day ${firstDay.day} · ${firstDay.shortDate} (${firstDay.weekday})`;
+      document.getElementById('scheduleCount').textContent = `${firstDay.schedule.length} activities`;
+      initSectionObserver();
+    }
+
+    initPage();
+  </script>
+</body>
+</html>
